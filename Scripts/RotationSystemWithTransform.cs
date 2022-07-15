@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RotationSystemWithTransform : RotationSystem
+namespace KimScor.RotationSystem
 {
-    protected override void UpdateRotation(float deltaTime)
+    public class RotationSystemWithTransform : RotationSystem
     {
-        Vector3 rotation = transform.eulerAngles;
+        protected override void UpdateRotation(float deltaTime)
+        {
+            Vector3 rotation = transform.eulerAngles;
 
-        float angle = Mathf.MoveTowardsAngle(rotation.y, TurnEulerAngles.y, deltaTime * TurnSpeed);
+            float angle = Mathf.MoveTowardsAngle(rotation.y, TurnEulerAngles.y, deltaTime * TurnSpeed);
 
-        rotation.y = angle;
+            rotation.y = angle;
 
-        transform.eulerAngles = rotation;
+            transform.eulerAngles = rotation;
+        }
     }
+
 }
