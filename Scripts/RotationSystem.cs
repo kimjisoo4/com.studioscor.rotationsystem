@@ -139,6 +139,7 @@ namespace KimScor.RotationSystem
             Quaternion newRotation = Quaternion.LookRotation(direction);
 
             _TurnEulerAngles = newRotation.eulerAngles;
+
         }
 
         public virtual void OnRotationToTargetOrDirection()
