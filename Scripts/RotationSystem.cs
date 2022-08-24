@@ -153,5 +153,14 @@ namespace KimScor.RotationSystem
                 OnRotationToDirection();
             }
         }
+
+        public virtual void SetRotation(Vector3 direction)
+        {
+            Quaternion newRotation = Quaternion.LookRotation(direction);
+
+            transform.rotation = newRotation;
+            
+            _TurnEulerAngles = newRotation.eulerAngles;
+        }
     }
 }
