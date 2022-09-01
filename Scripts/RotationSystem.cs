@@ -28,6 +28,7 @@ namespace KimScor.RotationSystem
         protected Vector3 _RotationDirection = Vector3.zero;
         public Vector3 TurnEulerAngles => _TurnEulerAngles;
         public Vector3 RotationDirection => _RotationDirection;
+        public ERotationType RotationType => _RotationType;
 
 
         #region Setter
@@ -45,6 +46,9 @@ namespace KimScor.RotationSystem
         }
         public void SetRotationDirection(Vector3 Direction)
         {
+            if (Direction == Vector3.zero)
+                return;
+
             _RotationDirection = Direction;
         }
 
@@ -158,9 +162,9 @@ namespace KimScor.RotationSystem
         {
             Quaternion newRotation = Quaternion.LookRotation(direction);
 
-            transform.rotation = newRotation;
-            
             _TurnEulerAngles = newRotation.eulerAngles;
+
+            transform.rotation = newRotation;
         }
     }
 }
