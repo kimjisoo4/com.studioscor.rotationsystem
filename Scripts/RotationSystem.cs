@@ -14,7 +14,7 @@ namespace KimScor.RotationSystem
 
         [SerializeField] protected Transform _TargetTransform;
         [SerializeField] protected Transform _CameraTransform;
-        [SerializeField] protected bool _UseRotation = false;
+        [SerializeField] protected bool _UseRotation = true;
 
         [SerializeField] public bool UseRotation => _UseRotation;
         [SerializeField] public Transform TargetTransform => _TargetTransform;
@@ -47,7 +47,11 @@ namespace KimScor.RotationSystem
         public void SetRotationDirection(Vector3 Direction)
         {
             if (Direction == Vector3.zero)
+            {
+                _RotationDirection = transform.forward;
+                
                 return;
+            }
 
             _RotationDirection = Direction;
         }
