@@ -16,20 +16,29 @@ namespace KimScor.RotationSystem
         [SerializeField] protected Transform _CameraTransform;
         [SerializeField] protected bool _UseRotation = true;
 
-        [SerializeField] public bool UseRotation => _UseRotation;
-        [SerializeField] public Transform TargetTransform => _TargetTransform;
-        [SerializeField] public Transform CameraTransform => _CameraTransform;
+        public bool UseRotation => _UseRotation;
+        public Transform TargetTransform => _TargetTransform;
+        public Transform CameraTransform => _CameraTransform;
 
+        [Header(" [ Ignore Input ] ")]
+        [SerializeField] private bool _IgnoreInput = false;
 
         [Header("[Debug Mode]")]
         [SerializeField] protected bool DebugMode = false;
 
         protected Vector3 _TurnEulerAngles = Vector3.zero;
+
+        protected Vector3 _InputDirection = Vector3.zero;
+
         protected Vector3 _RotationDirection = Vector3.zero;
         public Vector3 TurnEulerAngles => _TurnEulerAngles;
         public Vector3 RotationDirection => _RotationDirection;
+        public Vector3 InputDirection => _InputDirection;
+
         public ERotationType RotationType => _RotationType;
 
+        private int _IgnoreInputStack = 0;
+        public bool IgnoreInput => _IgnoreInput;
 
         #region Setter
         public void SetRotationType(ERotationType newRotationType)
@@ -44,22 +53,61 @@ namespace KimScor.RotationSystem
         {
             _UseRotation = useRotation;
         }
-        public void SetRotationDirection(Vector3 Direction)
+
+        public void SetInputDirection(Vector3 direction)
         {
-            if (Direction == Vector3.zero)
+            if (IgnoreInput || direction == Vector3.zero)
+            {
+                _InputDirection = transform.forward;
+
+                return;
+            }
+
+            _InputDirection = direction;
+        }
+        public void SetRotationDirection(Vector3 direction)
+        {
+            if (direction == Vector3.zero)
             {
                 _RotationDirection = transform.forward;
                 
                 return;
             }
 
-            _RotationDirection = Direction;
+            _RotationDirection = direction;
         }
 
         public void SetRotationTarget(Transform target)
         {
             _TargetTransform = target;
         }
+        public void SetIgnoreInput(bool ignoreInput)
+        {
+            if (_IgnoreInput == ignoreInput)
+                return;
+
+            _IgnoreInput = ignoreInput;
+        }
+
+        public void AddIgnoreInput()
+        {
+            _IgnoreInputStack++;
+
+            SetIgnoreInput(_IgnoreInputStack != 0);
+        }
+        public void RemoveIgnoreInput()
+        {
+            _IgnoreInputStack--;
+
+            SetIgnoreInput(_IgnoreInputStack != 0);
+        }
+        public void ClearIngnoreInput()
+        {
+            _IgnoreInputStack = 0;
+
+            SetIgnoreInput(false);
+        }
+
         #endregion
 
         private void Awake()
@@ -80,6 +128,9 @@ namespace KimScor.RotationSystem
 
             switch (_RotationType)
             {
+                case ERotationType.InputDirection:
+                    OnRotationToInputDirection();
+                    break;
                 case ERotationType.Direction:
                     OnRotationToDirection();
                     break;
@@ -101,6 +152,30 @@ namespace KimScor.RotationSystem
 
         protected abstract void UpdateRotation(float deltaTime);
 
+        public virtual void ResetRotation()
+        {
+            _TurnEulerAngles = Vector3.zero;
+            _InputDirection = Vector3.zero;
+            _RotationDirection = Vector3.zero;
+
+            _TargetTransform = null;
+
+            ClearIngnoreInput();
+
+        }
+        public virtual void OnRotationToInputDirection()
+        {
+            if (InputDirection == Vector3.zero)
+            {
+                _TurnEulerAngles = transform.eulerAngles;
+
+                return;
+            }
+
+            Quaternion newRotation = Quaternion.LookRotation(InputDirection);
+
+            _TurnEulerAngles = newRotation.eulerAngles;
+        }
         public virtual void OnRotationToDirection()
         {
             if (RotationDirection == Vector3.zero)
