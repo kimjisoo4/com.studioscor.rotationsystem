@@ -3,8 +3,13 @@ using StudioScor.Utilities;
 
 namespace StudioScor.RotationSystem
 {
+    public interface IRotationSystem
+    {
+        public void SetInputDirection(Vector3 direction);
+    }
+
     [AddComponentMenu("StudioScor/RotationSystem/Rotation System Component", order: 0)]
-    public class RotationSystemComponent : BaseMonoBehaviour
+    public class RotationSystemComponent : BaseMonoBehaviour, IRotationSystem
     {
         #region Events
         public delegate void ChangedLookTargetHandler(RotationSystemComponent rotationSystem, Transform currentTarget, Transform prevTarget);
