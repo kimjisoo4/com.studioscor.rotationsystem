@@ -8,16 +8,6 @@ namespace StudioScor.RotationSystem
         [Header(" [ Rotation To Look Direction ] ")]
         [SerializeField, Min(0f)] private float _TurnSpeed = 720f;
 
-        public override bool CanEnterState()
-        {
-            if (!base.CanEnterState())
-                return false;
-
-            if (RotationSystem.LookDirection == default)
-                return false;
-
-            return true;
-        }
         public void SetTurnSpeed(float newSpeed)
         {
             _TurnSpeed = newSpeed;
