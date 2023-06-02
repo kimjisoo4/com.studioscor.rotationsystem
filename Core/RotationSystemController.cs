@@ -59,9 +59,7 @@ namespace StudioScor.RotationSystem
 
         public void SetTurnSpeed(float newSpeed)
         {
-            _LookDirectionState.SetTurnSpeed(newSpeed);
-            _LookTargetState.SetTurnSpeed(newSpeed);
-            _LookCameraDirectionState.SetTurnSpeed(newSpeed);
+            
         }
 
         public void SetLookTarget(Transform target)
