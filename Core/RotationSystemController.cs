@@ -73,18 +73,19 @@ namespace StudioScor.RotationSystem
 
         public void OnLookDirection()
         {
-            _RotationSystem.TrySetState(_LookDirectionState);
+            //_RotationSystem.TrySetState(_LookDirectionState);
         }
         public void OnLookCameraDirection()
         {
-            _RotationSystem.TrySetState(_LookCameraDirectionState);
+            //_RotationSystem.TrySetState(_LookCameraDirectionState);
         }
         public void OnLookTargetDirection()
-        {
+        {/*
             if (!_RotationSystem.TrySetState(_LookTargetState))
             {
                 _RotationSystem.TrySetState(_LookDirectionState);
             }
+*/
         }
 
     }

@@ -40,16 +40,11 @@ namespace StudioScor.RotationSystem
 
     public interface IRotationSystem
     {
+        public Transform transform { get; }
+        public GameObject gameObject { get; }
+
         public void SetInputDirection(Vector3 direction);
-        public void SetLookDirection(Vector3 direction);
-        public void SetLookTarget(Transform target);
-
-        public void OnRotationToInput();
-        public void OnRotationToLook();
-        public void OnRotationToTarget();
-
         public void SetTurnSpeed(float turnSpeed);
-
         public void SetRotation(Vector3 eulerAngle, bool isImmediately = false);
         public void AddRotation(Quaternion rotation);
 
@@ -82,16 +77,10 @@ namespace StudioScor.RotationSystem
 
 
     [AddComponentMenu("StudioScor/RotationSystem/Rotation System Component", order: 0)]
-    public class RotationSystemComponent : BaseMonoBehaviour, IRotationSystem, IRotationSystemEvent, IRotationSystemGetter, IRotationStateMachine
+    public class RotationSystemComponent : BaseMonoBehaviour, IRotationSystem, IRotationSystemEvent, IRotationSystemGetter
     {
         [Header(" [ Rotation System ] ")]
         [SerializeField] private float turnSpeed = 720f;
-
-        [Header(" [ Rotation State Machine ] ")]
-        [SerializeField] private FiniteStateMachineSystem<RotationState> stateMachine;
-        [SerializeField] private RotationState inputRotationState;
-        [SerializeField] private RotationState lookRotationState;
-        [SerializeField] private RotationState lookTargetRotationState;
 
         protected Transform lookTarget;
         protected Vector3 lookDirection;
@@ -114,31 +103,12 @@ namespace StudioScor.RotationSystem
 
         protected void Setup()
         {
-            stateMachine.Setup();
-            stateMachine.OnChangedState += StateMachine_OnChangedState;
-
             OnSetup();
         }
 
 
         protected virtual void OnSetup() { }
         
-        public bool TrySetDefaultState()
-        {
-            return stateMachine.TrySetDefaultState();
-        }
-        public void ForceSetDefaultState()
-        {
-            stateMachine.ForceSetDefaultState();
-        }
-        public bool TrySetState(RotationState rotationState)
-        {
-            return stateMachine.TrySetState(rotationState);
-        }
-        public void ForceSetState(RotationState rotationState)
-        {
-            stateMachine.ForceSetState(rotationState);
-        }
         public void SetInputDirection(Vector3 direction)
         {
             inputDirection = direction;
@@ -162,10 +132,11 @@ namespace StudioScor.RotationSystem
 
         public void UpdateRotation(float deltaTime)
         {
-            stateMachine.CurrentState.ProcessUpdate(deltaTime);
+            ProcessRotation(deltaTime);
 
             OnRotation();
         }
+
         public void SetTurnSpeed(float newTurnSpeed)
         {
             turnSpeed = newTurnSpeed;
@@ -185,17 +156,23 @@ namespace StudioScor.RotationSystem
             transform.rotation *= rotation;
         }
 
-        public void OnRotationToInput()
+        protected virtual void ProcessRotation(float deltaTime)
         {
-            TrySetState(inputRotationState);
-        }
-        public void OnRotationToLook()
-        {
-            TrySetState(lookRotationState);
-        }
-        public void OnRotationToTarget()
-        {
-            TrySetState(lookTargetRotationState);
+            if (InputDirection == Vector3.zero)
+            {
+                SetRotation(transform.eulerAngles);
+
+                return;
+            }
+
+            Vector3 rotation = transform.eulerAngles;
+
+            Quaternion lookRotation = Quaternion.LookRotation(InputDirection);
+            Vector3 lookDirection = lookRotation.eulerAngles;
+
+            rotation.y = Mathf.MoveTowardsAngle(rotation.y, lookDirection.y, deltaTime * TurnSpeed);
+
+            SetRotation(rotation);
         }
 
         protected virtual void OnRotation()
@@ -204,11 +181,6 @@ namespace StudioScor.RotationSystem
         }
 
 
-        private void StateMachine_OnChangedState(FiniteStateMachineSystem<RotationState> stateMachine, RotationState currentState, RotationState prevState)
-        {
-            Callback_OnChangedRotationState(prevState);
-        }
-
         #region Callback
         protected void Callback_OnChangedLookTarget(Transform prevTarget)
         {
@@ -216,14 +188,6 @@ namespace StudioScor.RotationSystem
 
             OnChangedLookTarget?.Invoke(this, LookTarget, prevTarget);
         }
-        protected void Callback_OnChangedRotationState(RotationState prevState)
-        {
-            Log($"On Changed Rotation State - [ Current : {stateMachine.CurrentState} | Prev : {prevState}");
-
-            OnChangedRotationState?.Invoke(this, stateMachine.CurrentState, prevState);
-        }
-
-
         #endregion
     }
 }
