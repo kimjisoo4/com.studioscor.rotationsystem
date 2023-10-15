@@ -3,8 +3,8 @@ using StudioScor.Utilities;
 
 namespace StudioScor.RotationSystem
 {
-    public delegate void ChangedLookTargetHandler(IRotationSystemEvent rotationSystem, Transform currentTarget, Transform prevTarget);
-    public delegate void ChangedRotationStateHandler(IRotationSystemEvent rotationSystemEvent, RotationState currentState, RotationState prevState);
+    public delegate void ChangedLookTargetHandler(IRotationSystem rotationSystem, Transform currentTarget, Transform prevTarget);
+    public delegate void ChangedRotationStateHandler(IRotationSystem rotationSystemEvent, RotationState currentState, RotationState prevState);
 
     public static class RotationSystemUtility
     {
@@ -49,35 +49,19 @@ namespace StudioScor.RotationSystem
         public void AddRotation(Quaternion rotation);
 
         public void UpdateRotation(float deltaTime);
-    }
 
-    public interface IRotationStateMachine
-    {
-        public bool TrySetDefaultState();
-        public void ForceSetDefaultState();
-        public bool TrySetState(RotationState rotationState);
-        public void ForceSetState(RotationState rotationState);
-    }
-
-    public interface IRotationSystemGetter
-    {
         public Transform LookTarget { get; }
         public Vector3 LookDirection { get; }
         public Vector3 InputDirection { get; }
         public Vector3 EulerRotation { get; }
 
         public float TurnSpeed { get; }
-    }
-    public interface IRotationSystemEvent
-    {
+
         public event ChangedLookTargetHandler OnChangedLookTarget;
-        public event ChangedRotationStateHandler OnChangedRotationState;
     }
-
-
 
     [AddComponentMenu("StudioScor/RotationSystem/Rotation System Component", order: 0)]
-    public class RotationSystemComponent : BaseMonoBehaviour, IRotationSystem, IRotationSystemEvent, IRotationSystemGetter
+    public class RotationSystemComponent : BaseMonoBehaviour, IRotationSystem
     {
         [Header(" [ Rotation System ] ")]
         [SerializeField] private float turnSpeed = 720f;
@@ -94,7 +78,6 @@ namespace StudioScor.RotationSystem
         public float TurnSpeed => turnSpeed;
 
         public event ChangedLookTargetHandler OnChangedLookTarget;
-        public event ChangedRotationStateHandler OnChangedRotationState;
 
         private void Awake()
         {
