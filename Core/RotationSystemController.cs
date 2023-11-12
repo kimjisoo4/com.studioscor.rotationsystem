@@ -27,28 +27,28 @@ namespace StudioScor.RotationSystem
             {
                 if (!gameObject.TryGetComponentInParentOrChildren(out _RotationSystem))
                 {
-                    Log("Rotation System Is NULL!!", true);
+                    LogError("Rotation System Is NULL!!");
                 }
             }
             if (!_LookDirectionState)
             {
                 if (!gameObject.TryGetComponentInParentOrChildren(out _LookDirectionState))
                 {
-                    Log("Rotation Look Direction State Is NULL!!", true);
+                    LogError("Rotation Look Direction State Is NULL!!");
                 }
             }
             if (!_LookTargetState)
             {
                 if (!gameObject.TryGetComponentInParentOrChildren(out _LookTargetState))
                 {
-                    Log("Rotation Look Target State Is NULL!!", true);
+                    LogError("Rotation Look Target State Is NULL!!");
                 }
             }
             if (!_LookCameraDirectionState)
             {
                 if (!gameObject.TryGetComponentInParentOrChildren(out _LookCameraDirectionState))
                 {
-                    Log("Rotation Camera Direction State Is NULL!!", true);
+                    LogError("Rotation Camera Direction State Is NULL!!");
                 }
             }
         }

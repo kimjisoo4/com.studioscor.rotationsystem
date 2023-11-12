@@ -26,7 +26,7 @@ namespace StudioScor.RotationSystem
             {
                 if (!gameObject.TryGetComponentInParentOrChildren(out _RotationSystem))
                 {
-                    Log("Rotation System is NULL!", true);
+                    LogError("Rotation System is NULL!");
                 }
             }
 
