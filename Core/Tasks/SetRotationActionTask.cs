@@ -7,7 +7,7 @@ using static UnityEngine.UI.GridLayoutGroup;
 namespace StudioScor.RotationSystem
 {
     [Serializable]
-    public class SetRotationActionTask : ActionTask, ISubActionTask
+    public class SetRotationActionTask : Task, ISubTask
     {
         [Header(" [ Ser Rotation Action Task ] ")]
         [SerializeField] private bool _isImmediately = false;
@@ -32,7 +32,7 @@ namespace StudioScor.RotationSystem
             _direction.Setup(Owner);
         }
 
-        public override IActionTask Clone()
+        public override ITask Clone()
         {
             var clone = new SetRotationActionTask();
 
