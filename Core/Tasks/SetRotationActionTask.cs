@@ -10,7 +10,7 @@ namespace StudioScor.RotationSystem
     public class SetRotationActionTask : ActionTask, ISubActionTask
     {
         [Header(" [ Ser Rotation Action Task ] ")]
-        [SerializeField] private bool _isUpdatable = false;
+        [SerializeField] private bool _isImmediately = false;
         [SerializeReference]
 #if SCOR_ENABLE_SERIALIZEREFERENCE
         [SerializeReferenceDropdown]
@@ -46,26 +46,26 @@ namespace StudioScor.RotationSystem
         {
             base.EnterTask();
 
-            Vector3 direction = _direction.GetValue();
+            var isImmediately = _original is null ? _isImmediately : _original._isImmediately;
+            
+            if (isImmediately)
+            {
+                Vector3 direction = _direction.GetValue();
 
-            Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
+                Quaternion rotation = Quaternion.LookRotation(direction, Owner.transform.up);
 
-            _rotationSystem.SetRotation(rotation.eulerAngles, true);
+                _rotationSystem.SetRotation(rotation);
+            }
+            else
+            {
+                Vector3 direction = _direction.GetValue();
+
+                _rotationSystem.SetLookDirection(direction);
+            }
         }
 
         public void UpdateSubTask(float normalizedTime)
         {
-            var isUpdatable = _original is null ? _isUpdatable : _original._isUpdatable;
-
-            if (!isUpdatable)
-                return;
-
-            Vector3 direction = _direction.GetValue();
-
-            _rotationSystem.SetRotation(direction);
-
         }
-
-        
     }
 }
