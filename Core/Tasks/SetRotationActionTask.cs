@@ -64,6 +64,10 @@ namespace StudioScor.RotationSystem
             }
         }
 
+        public void FixedUpdateSubTask(float normalizedTime)
+        {
+
+        }
         public void UpdateSubTask(float normalizedTime)
         {
         }
