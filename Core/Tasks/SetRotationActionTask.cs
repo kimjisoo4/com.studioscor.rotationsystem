@@ -1,8 +1,6 @@
 ﻿using StudioScor.Utilities;
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static UnityEngine.UI.GridLayoutGroup;
 
 namespace StudioScor.RotationSystem
 {
@@ -37,7 +35,7 @@ namespace StudioScor.RotationSystem
             var clone = new SetRotationActionTask();
 
             clone._original = this;
-            clone._direction = _direction.Clone() as IDirectionVariable;
+            clone._direction = _direction.Clone();
 
             return clone;
         }
@@ -64,11 +62,11 @@ namespace StudioScor.RotationSystem
             }
         }
 
-        public void FixedUpdateSubTask(float normalizedTime)
+        public void FixedUpdateSubTask(float deltaTime, float normalizedTime)
         {
 
         }
-        public void UpdateSubTask(float normalizedTime)
+        public void UpdateSubTask(float deltaTime, float normalizedTime)
         {
         }
     }
