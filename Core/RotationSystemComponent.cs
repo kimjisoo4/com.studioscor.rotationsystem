@@ -359,7 +359,8 @@ namespace StudioScor.RotationSystem
 
         protected virtual void OnRotation()
         {
-            transform.rotation = TurnRotation;
+            transform.eulerAngles = new Vector3(0, TurnRotation.eulerAngles.y, 0);
+            //transform.rotatio = TurnRotation;
         }
 
 
