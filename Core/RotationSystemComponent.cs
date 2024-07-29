@@ -59,13 +59,15 @@ namespace StudioScor.RotationSystem
 
         public void SetTurnSpeed(float turnSpeed);
         public void SetAutoTransition(bool newAutoTransition);
+        public void TransitionRotationType(ERotationType newRotationType);
 
-        public void SetRotation(Quaternion newRotation);
+        public void SetRotation(Quaternion newRotation, bool isImmediately = true);
         public void AddRotation(Quaternion additiveRotation);
 
         public void UpdateRotation(float deltaTime);
 
         public Transform LookTarget { get; }
+        public Vector3 LookPosition { get; }
         public Vector3 LookDirection { get; }
         public Quaternion TurnRotation { get; }
 
@@ -102,6 +104,7 @@ namespace StudioScor.RotationSystem
         public Transform LookTarget => _lookTarget;
         public ERotationType RotationType => _rotationType;
         public Vector3 LookDirection => _lookDirection;
+        public Vector3 LookPosition => _lookPosition;
         public Quaternion TurnRotation => _turnRotation;
         public float TurnSpeed => _turnSpeed;
         public bool AutoTransition => _autoTransition;
@@ -204,11 +207,18 @@ namespace StudioScor.RotationSystem
             _autoTransition = newAutoTransition;
         }
 
-        public void SetRotation(Quaternion setRotation)
+        public void SetRotation(Quaternion setRotation, bool isImmediately = true)
         {
-            _overrideRotation = setRotation;
+            if(isImmediately)
+            {
+                transform.eulerAngles = new Vector3(0, setRotation.eulerAngles.y, 0);
+            }
+            else
+            {
+                _overrideRotation = setRotation;
 
-            _wasOverrideRotation = true;
+                _wasOverrideRotation = true;
+            }
         }
         public void AddRotation(Quaternion additiveRotation)
         {
