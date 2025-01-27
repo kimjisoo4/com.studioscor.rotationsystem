@@ -12,12 +12,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [
-        {
-            "name": "com.alexeytaranov.serializereferencedropdown",
-            "expression": "0.0.0",
-            "define": "SCOR_ENABLE_SERIALIZEREFERENCE"
-        }
-    ],
+    "versionDefines": [],
     "noEngineReferences": false
 }
